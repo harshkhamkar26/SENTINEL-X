@@ -1,0 +1,36 @@
+@startuml
+start
+:Receive security event;
+:Validate schema;
+if (Valid?) then (yes)
+  :Normalize event;
+  :Enrich metadata;
+  :Run detection rules;
+  :Run anomaly/risk scoring;
+  if (Suspicious?) then (yes)
+    :Create/update case;
+    :Collect evidence;
+    :Run agentic investigation;
+    :Generate explanation and recommendation;
+    :Evaluate response policy;
+    if (High-impact action?) then (yes)
+      :Request human approval;
+      if (Approved?) then (yes)
+        :Execute allow-listed response;
+      else (no)
+        :Record rejection;
+      endif
+    else (no)
+      :Execute permitted low-risk action;
+    endif
+    :Record outcome in audit trail;
+    :Update case;
+  else (no)
+    :Store event/metrics;
+  endif
+else (no)
+  :Quarantine invalid event;
+  :Log validation failure;
+endif
+stop
+@enduml

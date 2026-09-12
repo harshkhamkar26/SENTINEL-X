@@ -1,0 +1,35 @@
+@startuml
+actor "SOC Analyst" as Analyst
+participant "Ingestion" as Ingest
+participant "Normalizer" as Norm
+participant "Detection Engine" as Detect
+participant "Case Manager" as Case
+participant "Agent Orchestrator" as Agent
+participant "Threat Intel" as TI
+participant "Policy Engine" as Policy
+participant "SOAR Adapter" as SOAR
+participant "Audit Store" as Audit
+
+Analyst -> Ingest : submit/import events
+Ingest -> Norm : raw event
+Norm -> Norm : validate + canonicalize
+Norm -> Detect : normalized event
+Detect -> Detect : rules + correlation + risk
+Detect -> Case : create/update alert
+Case -> Agent : start investigation
+Agent -> TI : enrich indicators
+TI --> Agent : context/evidence
+Agent -> Agent : analyze + explain
+Agent --> Case : findings + confidence
+Case -> Policy : request response decision
+Policy -> Policy : evaluate severity + allow-list + approval
+alt approved / policy permitted
+  Policy -> SOAR : execute allowed action
+  SOAR --> Policy : action result
+else rejected
+  Policy --> Case : manual handling required
+end
+Policy -> Audit : decision
+SOAR -> Audit : action/outcome
+Case -> Audit : investigation timeline
+@enduml

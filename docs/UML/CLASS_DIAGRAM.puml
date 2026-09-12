@@ -1,0 +1,76 @@
+@startuml
+class Event {
+  +eventId: UUID
+  +timestamp: DateTime
+  +source: String
+  +eventType: String
+  +severity: Integer
+  +srcIp: String
+  +dstIp: String
+  +protocol: String
+  +rawReference: String
+}
+class Detection {
+  +detectionId: UUID
+  +ruleId: String
+  +score: Float
+  +confidence: Float
+  +status: String
+}
+class Alert {
+  +alertId: UUID
+  +title: String
+  +severity: String
+  +status: String
+}
+class Case {
+  +caseId: UUID
+  +openedAt: DateTime
+  +status: String
+  +priority: String
+}
+class Evidence {
+  +evidenceId: UUID
+  +type: String
+  +value: String
+  +source: String
+}
+class AgentRun {
+  +runId: UUID
+  +agentType: String
+  +confidence: Float
+  +explanation: String
+}
+class Recommendation {
+  +recommendationId: UUID
+  +action: String
+  +risk: String
+  +approvalRequired: Boolean
+}
+class ResponseAction {
+  +actionId: UUID
+  +adapter: String
+  +status: String
+  +executedAt: DateTime
+}
+class AuditEvent {
+  +auditId: UUID
+  +actor: String
+  +action: String
+  +timestamp: DateTime
+}
+class User {
+  +userId: UUID
+  +role: String
+}
+
+Event "1" --> "0..*" Detection
+Detection "1..*" --> "1" Alert
+Alert "1..*" --> "0..1" Case
+Case "1" --> "0..*" Evidence
+Case "1" --> "0..*" AgentRun
+AgentRun "1" --> "0..*" Recommendation
+Recommendation "1" --> "0..1" ResponseAction
+Case "1" --> "0..*" AuditEvent
+User "1" --> "0..*" AuditEvent
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+actor "SOC Analyst" as Analyst
+actor "SOC Manager" as Manager
+actor "Security Administrator" as Admin
+actor "Incident Responder" as Responder
+actor "Data Source / SIEM" as Source
+actor "Threat Intelligence" as TI
+
+rectangle "SENTINEL-X" {
+  usecase "Ingest Events" as UC1
+  usecase "Normalize & Validate" as UC2
+  usecase "Detect & Correlate" as UC3
+  usecase "Create Alert / Case" as UC4
+  usecase "Investigate Case" as UC5
+  usecase "Enrich Evidence" as UC6
+  usecase "AI Analysis & Explanation" as UC7
+  usecase "Assess SOC Posture" as UC8
+  usecase "Recommend Response" as UC9
+  usecase "Approve / Reject Action" as UC10
+  usecase "Execute Approved Action" as UC11
+  usecase "Review Audit Trail" as UC12
+  usecase "Generate Report" as UC13
+}
+
+Source --> UC1
+Admin --> UC1
+Analyst --> UC5
+Analyst --> UC12
+Analyst --> UC13
+Manager --> UC8
+Manager --> UC10
+Responder --> UC10
+Responder --> UC11
+TI --> UC6
+UC1 --> UC2 : <<include>>
+UC2 --> UC3 : <<include>>
+UC3 --> UC4 : <<include>>
+UC5 --> UC6 : <<include>>
+UC5 --> UC7 : <<include>>
+UC5 --> UC9 : <<include>>
+UC9 --> UC10 : <<extend>>
+UC10 --> UC11 : <<include>>
+UC11 --> UC12 : <<include>>
+UC3 --> UC8 : <<include>>
+@enduml
